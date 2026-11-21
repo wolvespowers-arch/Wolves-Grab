@@ -1,0 +1,17 @@
+{
+  "name": "Wolves Grab",
+  "short_name": "Wolves Grab",
+  "description": "Drop the link. Take the video.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e8edef",
+  "theme_color": "#143530",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
