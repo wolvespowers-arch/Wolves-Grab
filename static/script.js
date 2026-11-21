@@ -1,9 +1,10 @@
 const $ = id => document.getElementById(id);
 const msg = (t, e) => { $("msg").textContent = t; $("msg").className = e ? "err" : ""; };
 const fmt = s => s ? Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") : "";
+const getUrl = () => ($("url").value.match(/https?:\/\/\S+/) || [""])[0];
 
 $("go").onclick = async () => {
-  const url = $("url").value.trim();
+  const url = getUrl();
   if (!url) { msg("Paste a video link first.", true); return; }
   $("result").style.display = "none";
   $("go").disabled = true;
@@ -27,7 +28,7 @@ $("go").onclick = async () => {
 
 const dl = kind => {
   msg("Preparing your file. This can take a moment...");
-  window.location = "/api/download?kind=" + kind + "&url=" + encodeURIComponent($("url").value.trim());
+  window.location = "/api/download?kind=" + kind + "&url=" + encodeURIComponent(getUrl());
   setTimeout(() => msg(""), 6000);
 };
 
