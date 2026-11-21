@@ -1,9 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" fill="#143530"/>
-  <path d="M140 110 L215 190 L297 190 L372 110 L392 250 L330 385 L256 425 L182 385 L120 250 Z" fill="#e8edef"/>
-  <path d="M155 155 L200 196 L150 230 Z" fill="#143530"/>
-  <path d="M357 155 L312 196 L362 230 Z" fill="#143530"/>
-  <path d="M180 255 L236 275 L190 292 Z" fill="#f0a81c"/>
-  <path d="M332 255 L276 275 L322 292 Z" fill="#f0a81c"/>
-  <path d="M236 370 L276 370 L256 396 Z" fill="#143530"/>
+  <polyline points="62,160 110,350 146,240 182,350 230,160" fill="none" stroke="#e8edef" stroke-width="40" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M432 210 A80 80 0 1 0 447 256 H372" fill="none" stroke="#f0a81c" stroke-width="40"/>
 </svg>
