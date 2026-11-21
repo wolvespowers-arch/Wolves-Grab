@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" fill="#143530"/>
-  <polyline points="62,160 110,350 146,240 182,350 230,160" fill="none" stroke="#e8edef" stroke-width="40" stroke-linejoin="miter" stroke-miterlimit="10"/>
-  <path d="M432 210 A80 80 0 1 0 447 256 H372" fill="none" stroke="#f0a81c" stroke-width="40"/>
+  <polygon points="222,80 290,80 290,236 222,236" fill="#f0a81c"/>
+  <polygon points="130,214 382,214 256,352" fill="#f0a81c"/>
+  <polygon points="112,330 160,330 160,392 352,392 352,330 400,330 400,440 112,440" fill="#e8edef"/>
 </svg>
