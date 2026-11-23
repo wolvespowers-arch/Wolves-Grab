@@ -1,4 +1,4 @@
-/* Wolves Grab styles */
+ki/* Wolves Grab styles */
 :root,:root[data-theme="light"]{--frost:#e8edef;--pine:#143530;--soft:#4a625d;--line:#b9c6c8;--err:#b3261e;--card:#ffffff}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--frost:#0e1b19;--pine:#e8edef;--soft:#9fb5b0;--line:#2c524b;--err:#ff8a80;--card:#16302c}}
 :root[data-theme="dark"]{--frost:#0e1b19;--pine:#e8edef;--soft:#9fb5b0;--line:#2c524b;--err:#ff8a80;--card:#16302c}
@@ -44,3 +44,5 @@ button:focus-visible{outline:3px solid #f0a81c;outline-offset:2px}
 .about a:focus-visible{outline:3px solid #f0a81c;outline-offset:2px}
 small{display:block;margin-top:40px;color:var(--soft);font-size:.85rem}
 @media(max-width:560px){.inner{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+.install{margin-top:14px;padding:10px 18px;border-radius:6px;background:transparent;color:var(--pine);border:2px solid var(--pine)}
