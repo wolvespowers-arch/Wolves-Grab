@@ -1,10 +1,24 @@
 const $ = id => document.getElementById(id);
-const msg = (t, e) => { $("msg").textContent = t; $("msg").className = e ? "err" : ""; };
+const msg = (t, e) => { $("msg").textContent = t; $("msg").className = e ? "err" : ""; if (!e) $("report").hidden = true; };
 const fmt = s => s ? Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") : "";
 const getUrl = () => ($("url").value.match(/https?:\/\/\S+/) || [""])[0];
 const OFFLINE = "You're offline. Connect to the internet to find a video.";
 const KEY = "wg-history";
 let current = null;
+
+const WAKE = [
+  "The server is starting up. The first request can take up to a minute.",
+  "Still starting. Thank you for your patience.",
+  "Almost ready. Your request is being processed.",
+  "The server is warming up. Your video will load shortly."
+];
+
+function fail(text, url) {
+  msg(text, true);
+  const body = "Link: " + (url || "") + "\nProblem: " + text + "\nBrowser: " + navigator.userAgent;
+  $("report").href = "mailto:wolvespowers@gmail.com?subject=" + encodeURIComponent("Wolves Grab problem") + "&body=" + encodeURIComponent(body);
+  $("report").hidden = false;
+}
 
 const loadH = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } };
 const saveH = l => { try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (e) {} };
@@ -46,10 +60,13 @@ $("go").onclick = async () => {
   $("result").style.display = "none";
   $("go").disabled = true;
   msg("Looking up your video...");
+  let wi = 0;
+  const wake = setInterval(() => { msg(WAKE[wi % WAKE.length]); wi++; }, 6000);
   try {
     const r = await fetch("/api/info?url=" + encodeURIComponent(url));
+    clearInterval(wake);
     const d = await r.json();
-    if (!r.ok) { msg(d.error, true); return; }
+    if (!r.ok) { fail(d.error, url); return; }
     current = { title: d.title, url: url };
     $("thumb").src = d.thumbnail || "";
     $("thumb").style.display = d.thumbnail ? "block" : "none";
@@ -58,8 +75,11 @@ $("go").onclick = async () => {
     $("result").style.display = "block";
     msg("");
   } catch (e) {
-    msg(navigator.onLine ? "Could not reach the server. Try again." : OFFLINE, true);
+    clearInterval(wake);
+    if (navigator.onLine) fail("Could not reach the server. Try again.", url);
+    else msg(OFFLINE, true);
   } finally {
+    clearInterval(wake);
     $("go").disabled = false;
   }
 };
@@ -79,6 +99,26 @@ $("url").addEventListener("keydown", e => { if (e.key === "Enter") $("go").click
 window.addEventListener("offline", () => msg(OFFLINE, true));
 window.addEventListener("online", () => msg(""));
 
+$("paste").onclick = async () => {
+  try {
+    const t = await navigator.clipboard.readText();
+    if (!/https?:\/\//.test(t)) { msg("No link found in your clipboard. Copy a video link first.", true); return; }
+    $("url").value = t;
+    $("go").click();
+  } catch (e) {
+    msg("Couldn't read the clipboard. Long-press the box and tap Paste.", true);
+    $("url").focus();
+  }
+};
+
+$("share").onclick = async () => {
+  const data = { title: "Wolves Grab", text: "Free video downloader for TikTok and Instagram.", url: location.origin };
+  try {
+    if (navigator.share) await navigator.share(data);
+    else { await navigator.clipboard.writeText(location.origin); msg("Link copied. Send it to your friends."); }
+  } catch (e) {}
+};
+
 function handleShare() {
   const p = new URLSearchParams(location.search);
   const raw = [p.get("url"), p.get("text"), p.get("title")].filter(Boolean).join(" ");
@@ -89,12 +129,25 @@ function handleShare() {
   if (navigator.onLine) $("go").click();
 }
 
-renderH();
-handleShare();
+let installEvt = null;
+const installBtn = $("install");
+const isInstalled = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+if (!isInstalled()) installBtn.hidden = false;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+installBtn.onclick = async () => {
+  if (installEvt) {
+    installEvt.prompt();
+    await installEvt.userChoice;
+    installEvt = null;
+  } else {
+    msg("To install: tap the ⋮ menu in Chrome, then tap Add to Home screen. On iPhone, tap Share, then Add to Home Screen.");
+  }
+};
+window.addEventListener("appinstalled", () => {
+  installBtn.hidden = true;
+  msg("Installed! Open Wolves Grab from your home screen.");
+});
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
-        }
 const root = document.documentElement;
 const savedTheme = () => { try { return localStorage.getItem("wg-theme"); } catch (e) { return null; } };
 function applyTheme(t) {
@@ -109,24 +162,10 @@ $("theme").onclick = () => {
   try { localStorage.setItem("wg-theme", next); } catch (e) {}
   applyTheme(next);
 };
-let installEvt = null;
-const installBtn = $("install");
-const isInstalled = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
-if (!isInstalled()) installBtn.hidden = false;
 
-window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+renderH();
+handleShare();
 
-installBtn.onclick = async () => {
-  if (installEvt) {
-    installEvt.prompt();
-    await installEvt.userChoice;
-    installEvt = null;
-  } else {
-    msg("To install: tap the ⋮ menu in Chrome, then tap Add to Home screen. On iPhone, tap Share, then Add to Home Screen.");
-  }
-};
-
-window.addEventListener("appinstalled", () => {
-  installBtn.hidden = true;
-  msg("Installed! Open Wolves Grab from your home screen.");
-});
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+    }
