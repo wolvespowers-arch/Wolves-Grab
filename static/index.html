@@ -14,18 +14,23 @@
 </head>
 <body>
 <main>
-    <div class="top">
+  <div class="top">
     <div class="brand">Wolves Grab <span class="by">by WolvesPowers</span></div>
     <button id="theme" class="theme" aria-label="Change theme">☾ Dark</button>
-    </div>
+  </div>
   <h1>Drop the link.<br>Take the video.</h1>
   <p class="sub">Works with TikTok and Instagram. Paste a public link below.</p>
   <div class="box">
     <input id="url" type="url" placeholder="Paste a video link" aria-label="Video link" autocomplete="off">
     <button id="go">Find video</button>
   </div>
+  <div class="tools">
+    <button id="paste" class="tool">Paste link</button>
+    <button id="share" class="tool">Share app</button>
+    <button id="install" class="tool" hidden>Install app</button>
+  </div>
   <div id="msg" role="status"></div>
-      <button id="install" class="install" hidden>Install app</button>
+  <a id="report" href="#" hidden>Report this problem</a>
   <section id="result">
     <div class="inner">
       <img id="thumb" alt="">
@@ -39,11 +44,11 @@
       </div>
     </div>
   </section>
-    <section class="history" id="history">
+  <section class="history" id="history">
     <h2>Recent</h2>
     <ul id="hlist"></ul>
     <button class="clear" id="hclear">Clear history</button>
-    </section>
+  </section>
   <section class="about">
     <h2>About</h2>
     <p>WolvesPowers is a creator brand from Uganda, built around mindset and motivation. I'm Wamai Jordan Powers. I'm learning AI, computing and IT by building real things, and Wolves Grab is one of them.</p>
@@ -53,6 +58,7 @@
       <li><a href="https://www.youtube.com/@wolvespowers" target="_blank" rel="noopener">YouTube</a></li>
       <li><a href="https://www.instagram.com/alpha.powers.official" target="_blank" rel="noopener">Instagram</a></li>
       <li><a href="mailto:wolvespowers@gmail.com">Email</a></li>
+      <li><a href="mailto:wolvespowers@gmail.com?subject=Wolves%20Grab%20problem">Report a problem</a></li>
     </ul>
   </section>
   <small>Built by WolvesPowers. Only save videos you own or have permission to use.</small>
