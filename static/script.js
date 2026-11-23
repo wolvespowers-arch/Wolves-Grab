@@ -109,3 +109,24 @@ $("theme").onclick = () => {
   try { localStorage.setItem("wg-theme", next); } catch (e) {}
   applyTheme(next);
 };
+let installEvt = null;
+const installBtn = $("install");
+const isInstalled = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+if (!isInstalled()) installBtn.hidden = false;
+
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+
+installBtn.onclick = async () => {
+  if (installEvt) {
+    installEvt.prompt();
+    await installEvt.userChoice;
+    installEvt = null;
+  } else {
+    msg("To install: tap the ⋮ menu in Chrome, then tap Add to Home screen. On iPhone, tap Share, then Add to Home Screen.");
+  }
+};
+
+window.addEventListener("appinstalled", () => {
+  installBtn.hidden = true;
+  msg("Installed! Open Wolves Grab from your home screen.");
+});
