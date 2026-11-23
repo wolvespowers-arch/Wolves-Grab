@@ -95,3 +95,17 @@ handleShare();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
         }
+const root = document.documentElement;
+const savedTheme = () => { try { return localStorage.getItem("wg-theme"); } catch (e) { return null; } };
+function applyTheme(t) {
+  root.setAttribute("data-theme", t);
+  $("theme").textContent = t === "dark" ? "☀ Light" : "☾ Dark";
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute("content", t === "dark" ? "#0e1b19" : "#143530");
+}
+applyTheme(savedTheme() || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+$("theme").onclick = () => {
+  const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  try { localStorage.setItem("wg-theme", next); } catch (e) {}
+  applyTheme(next);
+};
